@@ -17,3 +17,5 @@ export const chat = createSlice({
 export const { ADD_MESSAGE } = chat.actions;
 
 export default chat.reducer;
+     
+// UI Component -> Redux Store (LocalStorage) -> Firebase

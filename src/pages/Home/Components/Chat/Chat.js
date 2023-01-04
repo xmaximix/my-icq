@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import Image from "../../../../common/components/Image";
 import { favoritesIcon, plusIcon, voiceRecordIcon } from "../../../../assets";
 import { searchIcon } from "../../../../assets";
@@ -64,6 +65,7 @@ function BottomPanel() {
 }
 
 function MessagesInput() {
+  const dispatch = useDispatch();
   const [message, setMessage] = useState("");
 
   const handleChange = (e) => {
@@ -72,7 +74,7 @@ function MessagesInput() {
 
   const handleEnter = (e) => {
     if (e.key === "Enter" && message.length > 0) {
-      sendMessage(message);
+      dispatch(sendMessage(message));
       setMessage("");
     }
   };
