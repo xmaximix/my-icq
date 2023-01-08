@@ -1,9 +1,9 @@
 import React from "react";
 import { StyledMessage, StyledText } from "./ChatMessage.styled";
 
-function Message({ text = "empty" }) {
+function Message({ text = "empty", onClick }) {
   return (
-    <StyledMessage>
+    <StyledMessage onClick={onClick}>
       <StyledText>{text}</StyledText>
     </StyledMessage>
   );

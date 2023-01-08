@@ -1,18 +1,16 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
-import { Provider, useDispatch } from "react-redux";
+import { Provider } from "react-redux";
 import { store } from "./store/store";
-import { initializeApp } from "firebase/app";
-// import { getFirestore, collection, getDocs } from 'firebase/firestore/lite';
-import { getDatabase, ref, onValue } from "firebase/database";
-import { getAnalytics } from "firebase/analytics";
-import { firebaseConfig } from "./service/firebase";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import HomeContainer from "./pages/Home";
 import "./i18n";
+import { ref, onValue, getDatabase } from "@firebase/database";
+import { initializeApp } from "@firebase/app";
+import { firebaseConfig } from "./services/firebase";
 
 const container = document.getElementById("root");
 const root = createRoot(container);
@@ -22,18 +20,29 @@ const router = createBrowserRouter([
     element: <HomeContainer></HomeContainer>,
   },
 ]);
-// Initialize Firebase
+
 const app = initializeApp(firebaseConfig);
-getAnalytics(app);
-
 const db = getDatabase(app);
+const query = ref(db, `messages/${store.getState().chat.user}`);
 
-const starCountRef = ref(db, "yolo");
-
-onValue(starCountRef, (snapshot) => {
-  const data = snapshot.val();
-  store.dispatch({ type: "chat/ADD_MESSAGE", payload: data });
-});
+onValue(
+  query,
+  (snapshot) => {
+    setTimeout(() => {
+      let data = snapshot.val();
+      if (data != null) {
+        console.log(data);
+        store.dispatch({
+          type: "chat/ONADDED_MESSAGE",
+          payload: data,
+        });
+      }
+    }, 10);
+  },
+  (error) => {
+    console.error(error);
+  }
+);
 
 root.render(
   <React.StrictMode>

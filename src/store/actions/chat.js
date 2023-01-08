@@ -5,4 +5,11 @@ const sendMessage = (message) => {
   };
 };
 
-export { sendMessage };
+const deleteMessage = (message) => {
+  return {
+    type: "chat/DELETE_MESSAGE",
+    payload: message,
+  };
+};
+
+export { sendMessage, deleteMessage };
