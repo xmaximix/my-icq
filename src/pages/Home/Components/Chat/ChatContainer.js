@@ -3,7 +3,7 @@ import Chat from "./Chat";
 import { useSelector } from "react-redux";
 
 function ChatContainer() {
-  const messages = useSelector((state) => state.chat.messages);
+  const messages = useSelector((state) => state.chat.displayedMessages);
   return <Chat messages={messages} />;
 }
 

@@ -16,7 +16,8 @@ import { Trans } from "react-i18next";
 import Message from "../ChatMessage/ChatMessage";
 import Input from "../../../../common/components/Input";
 import { sendMessage } from "../../../../store/actions/chat";
-import { useChatScroll } from "../../../../utils/hooks";
+import { useChatScroll } from "../../../../hooks/useChatScrool";
+import ActionPanel from "../ActionPanel/ActionPanel";
 
 function ChatHeader() {
   return (
@@ -46,12 +47,48 @@ function ChatHeaderRightSide() {
 }
 
 function DialogWindow({ messages }) {
+  const [mousePosition, setMousePosition] = useState({ top: 0, left: 0 });
+  const [showActions, setShowActions] = useState(false);
+  const [selectedMessage, setSelectedMessage] = useState(null);
+  const [actionsPosition, setActionPosition] = useState({ top: 0, left: 0 });
+  const onMouseMove = (e) =>
+    setMousePosition({ top: e.screenY - 140, left: e.screenX - 100 });
+
+  function onMessageClicked(e, message) {
+    e.stopPropagation();
+    setActionPosition(mousePosition);
+    setShowActions(true);
+    setSelectedMessage(message);
+  }
+
   const messagesList = messages.map((message, i) => (
-    <Message key={i} text={message} />
+    <Message
+      onClick={(e) => {
+        onMessageClicked(e, message);
+      }}
+      key={i}
+      text={message !== undefined ? message.text : "undefined"}
+    />
   ));
   const ref = useChatScroll(messages);
 
-  return <StyledDialogWindow ref={ref}>{messagesList}</StyledDialogWindow>;
+  return (
+    <StyledDialogWindow
+      ref={ref}
+      onMouseMove={onMouseMove}
+      onClick={() => {
+        setShowActions(false);
+      }}
+    >
+      {showActions && (
+        <ActionPanel
+          position={actionsPosition}
+          selectedMessage={selectedMessage}
+        />
+      )}
+      {messagesList}
+    </StyledDialogWindow>
+  );
 }
 
 function BottomPanel() {

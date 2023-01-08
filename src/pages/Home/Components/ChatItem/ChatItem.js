@@ -29,8 +29,11 @@ function ChatItem({ userAvatar = favoritesIcon }) {
   if (userAvatar === favoritesIcon) {
     userName = "Favorites";
   }
-  const messages = useSelector((state) => state.chat.messages);
-  let lastMessageText = messages[messages.length - 1];
+  const messages = useSelector((state) => state.chat.displayedMessages);
+  let lastMessageText = "";
+  if (messages.length > 0) {
+    lastMessageText = messages[messages.length - 1].text;
+  }
   let lastMessageDate = "22.02.13";
   return (
     <StyledChatItem>
