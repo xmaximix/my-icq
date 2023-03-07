@@ -18,6 +18,7 @@ import Input from "../../../../common/components/Input";
 import { sendMessage } from "../../../../store/actions/chat";
 import { useChatScroll } from "../../../../hooks/useChatScrool";
 import ActionPanel from "../ActionPanel/ActionPanel";
+import useMousePosition from "../../../../hooks/useMousePosition";
 
 function ChatHeader() {
   return (
@@ -47,16 +48,17 @@ function ChatHeaderRightSide() {
 }
 
 function DialogWindow({ messages }) {
-  const [mousePosition, setMousePosition] = useState({ top: 0, left: 0 });
+  const mousePosition = useMousePosition();
   const [showActions, setShowActions] = useState(false);
   const [selectedMessage, setSelectedMessage] = useState(null);
-  const [actionsPosition, setActionPosition] = useState({ top: 0, left: 0 });
-  const onMouseMove = (e) =>
-    setMousePosition({ top: e.screenY - 140, left: e.screenX - 100 });
+  const [actionsPosition, setActionPosition] = useState({ left: 0, top: 0 });
 
   function onMessageClicked(e, message) {
     e.stopPropagation();
+    mousePosition.left -= 100;
+    mousePosition.top -= 70;
     setActionPosition(mousePosition);
+    console.log(actionsPosition);
     setShowActions(true);
     setSelectedMessage(message);
   }
@@ -75,7 +77,6 @@ function DialogWindow({ messages }) {
   return (
     <StyledDialogWindow
       ref={ref}
-      onMouseMove={onMouseMove}
       onClick={() => {
         setShowActions(false);
       }}
@@ -110,6 +111,7 @@ function MessagesInput() {
   };
 
   const handleEnter = (e) => {
+    console.log(e);
     if (e.key === "Enter" && message.length > 0) {
       dispatch(sendMessage(message));
       setMessage("");

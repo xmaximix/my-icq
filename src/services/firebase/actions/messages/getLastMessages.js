@@ -3,21 +3,32 @@ import { store } from "../../../../store/store";
 import { initializeApp } from "@firebase/app";
 import { firebaseConfig } from "../../../firebase";
 
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+export function initialize() {
+  const app = initializeApp(firebaseConfig);
+  return app;
+}
+
+const db = getDatabase(initialize());
+
 const query = ref(db, `messages/${store.getState().chat.user}`);
 
 onValue(
   query,
   (snapshot) => {
-    const data = snapshot.val();
-    console.log(data);
-    if (data != null) {
-      store.dispatch({
-        type: "chat/ONADDED_MESSAGE",
-        payload: data,
-      });
-    }
+    const promise = new Promise((resolve, reject) => {
+      let data = snapshot.val();
+      resolve(data);
+    });
+
+    promise.then((result) => {
+      console.log(result);
+      if (result != null) {
+        store.dispatch({
+          type: "chat/ONADDED_MESSAGE",
+          payload: result,
+        });
+      }
+    });
   },
   (error) => {
     console.error(error);

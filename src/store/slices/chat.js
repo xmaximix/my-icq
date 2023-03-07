@@ -1,7 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { createMessage } from "../../services/firebase/actions/messages/createMessage";
 import { deleteMessage } from "../../services/firebase/actions/messages/deleteMessage";
-import { current } from "@reduxjs/toolkit";
 
 export const chat = createSlice({
   name: "chat",
